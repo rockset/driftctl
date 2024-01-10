@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
 	"github.com/snyk/driftctl/enumeration"
 	"github.com/snyk/driftctl/enumeration/remote/terraform"
 	tf "github.com/snyk/driftctl/enumeration/terraform"
@@ -67,6 +68,9 @@ func NewAWSTerraformProvider(version string, progress enumeration.ProgressCounte
 	}
 
 	p.session, err = session.NewSessionWithOptions(session.Options{
+		Config: aws.Config{
+			MaxRetries: aws.Int(10),
+		},
 		SharedConfigState: session.SharedConfigEnable,
 	})
 	if err != nil {
